@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------------------------------------------------------
+   Tokens
+
+   Light is defined on bare `:root` and dark overrides only what changes, so a
+   scheme can never be half-defined. Both halves are stated in one place for
+   the same reason the app states them in one file: no component should ever
+   have to branch on the colour scheme.
+
+   Source of truth is the app's Extensions/Color+Theme.swift. If a value here
+   disagrees with that file, that file is right.
+   --------------------------------------------------------------------------- */
+
+:root {
+  --ground: #ffffff;
+  --surface: #fafafa;
+  --surface-2: #f5f5f5;
+  --ink: #0a0a0a;
+  --muted: #6b6b6b;
+  --faint: #9b9b9b;
+
+  /* Hairlines are an opacity over the opposite end, not a grey. That is what
+     keeps them reading as a hairline rather than as a second colour, and it is
+     how the app specifies them: 8 percent black on white, 12 percent white on
+     black. The two percentages are not a typo and are not interchangeable.
+     8 percent white on black is invisible; 12 percent black on white is a
+     visible grey line. */
+  --rule: rgba(0, 0, 0, 0.08);
+
+  --nav-h: 4rem;
+  --reveal-rise: 20px;
+
+  /* Tells the browser to paint form controls, scrollbars and the canvas
+     behind the page in the matching scheme. Without it a dark page keeps a
+     white overscroll gutter on iOS. */
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground: #000000;
+    --surface: #0a0a0a;
+    --surface-2: #141414;
+    --ink: #f5f5f5;
+    --muted: #a0a0a0;
+    --faint: #6b6b6b;
+    --rule: rgba(255, 255, 255, 0.12);
+    color-scheme: dark;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+html,
+body {
+  background: var(--ground);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Monochrome, like everything else. The default selection tint is the one
+   place a browser will inject a blue into an otherwise colourless page. */
+::selection {
+  background: var(--ink);
+  color: var(--ground);
+}
+
+/* ---------------------------------------------------------------------------
+   Reveal on scroll
+
+   Carried from the studio site unchanged, including the easing and duration.
+   The transform is a translate only: no scale, no blur. See components/Reveal.tsx.
+   --------------------------------------------------------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(var(--reveal-rise));
+  transition:
+    opacity 0.95s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.95s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.reveal.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Anything that animates in starts invisible, which means a visitor who has
+   asked for reduced motion would see an empty page if the observer never
+   fired. Show everything immediately instead of animating it. */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .animate-fade-up,
+  .animate-fade-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* The nav is fixed, so a hash jump would otherwise land a section flush
+   underneath it. */
+.section-anchor {
+  scroll-margin-top: calc(var(--nav-h) + 1.5rem);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* A rule that fades out at both ends. Used between sections where a full
+   border would read as a box edge. */
+.hairline {
+  background-image: linear-gradient(
+    to right,
+    transparent,
+    var(--rule),
+    transparent
+  );
+  height: 1px;
+}
