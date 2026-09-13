@@ -1,6 +1,7 @@
 import {
   APP_NAME,
   SITE_URL,
+  TAGLINE,
   STUDIO_NAME,
   STUDIO_URL,
   appStoreUrl,
@@ -37,8 +38,8 @@ export function appSchema(): Record<string, unknown> {
     operatingSystem: "iOS",
     url: SITE_URL,
     image: absoluteUrl("/app-icon-light.png"),
-    description:
-      "A quote when you asked for one, and a goal you actually close. Everything stays on your iPhone.",
+    /* Shared with the hero, the footer and the page metadata. See TAGLINE. */
+    description: TAGLINE,
     publisher: {
       "@type": "Organization",
       name: STUDIO_NAME,

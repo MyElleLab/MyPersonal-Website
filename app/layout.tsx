@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { JsonLd } from "@/components/JsonLd";
 import { appSchema } from "@/lib/schema";
-import { APP_NAME, SITE_URL } from "@/lib/site";
+import { APP_NAME, META_DESCRIPTION, SITE_URL, TAGLINE } from "@/lib/site";
 
 /**
  * No next/font import, and that is the design rather than an omission.
@@ -29,22 +29,23 @@ export const metadata: Metadata = {
        same separator the footer's legal row uses. */
     template: `%s · ${APP_NAME}`,
   },
-  description:
-    "A quote when you asked for one, and a goal you actually close. Everything stays on your iPhone. No account, no analytics.",
+  /* All three descriptions below read from lib/site.ts. They used to be three
+     separate literals here plus one in lib/schema.ts and one in the footer,
+     which is five copies of the positioning line and four places for it to go
+     stale unnoticed: nobody proofreads a link preview. */
+  description: META_DESCRIPTION,
   applicationName: APP_NAME,
   openGraph: {
     type: "website",
     url: SITE_URL,
     siteName: APP_NAME,
     title: APP_NAME,
-    description:
-      "A quote when you asked for one, and a goal you actually close. Everything stays on your iPhone.",
+    description: TAGLINE,
   },
   twitter: {
     card: "summary",
     title: APP_NAME,
-    description:
-      "A quote when you asked for one, and a goal you actually close. Everything stays on your iPhone.",
+    description: TAGLINE,
   },
 };
 

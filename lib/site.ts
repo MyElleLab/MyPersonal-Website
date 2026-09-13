@@ -33,6 +33,38 @@ export const APP_SHORT_NAME = "(E)go";
 
 export const SITE_NAME = APP_NAME;
 
+/* ---------------------------------------------------------------------------
+   Positioning
+   --------------------------------------------------------------------------- */
+
+/**
+ * The one sentence the site is making. Everything else supports it.
+ *
+ * The app's point is WORTH, not discipline: it exists to tell you that what you
+ * are does not rise and fall with what you got done. Five of its six categories
+ * are about effort and one is not, and the one that is not is the reason the
+ * app exists. Copy that leads with mechanics ("a quote when you asked for one")
+ * describes the product accurately and sells the wrong thing.
+ *
+ * ONE CONSTANT, FIVE CONSUMERS, and that is the point of it existing. This
+ * string previously appeared as five separate literals: the hero, the footer,
+ * `metadata.description`, `openGraph.description` and `twitter.description` in
+ * app/layout.tsx, and the schema.org description in lib/schema.ts. Five copies
+ * is how a positioning line goes stale in four places and nobody notices,
+ * because the four that are wrong are the ones nobody looks at: the search
+ * snippet, the link preview and the structured data.
+ */
+export const TAGLINE =
+  "Your worth does not move with your output. A few lines a day to say so. Everything stays on your iPhone.";
+
+/**
+ * The search snippet and link preview. The tagline plus the privacy claim,
+ * because a description has room for it and the hero does not.
+ *
+ * Derived rather than retyped, so the two cannot disagree about the product.
+ */
+export const META_DESCRIPTION = `${TAGLINE} No account, no analytics.`;
+
 export const STUDIO_NAME = "MyElleLab";
 export const STUDIO_URL = "https://myellelab.com";
 
@@ -78,15 +110,30 @@ export function absoluteUrl(path: string): string {
 /** Resources/quotes.json, counted: 240 entries, 40 in each of six categories. */
 export const QUOTE_COUNT = 240;
 
-/** Models/QuoteCategory.swift. Names and one-line descriptions are the app's
-    own `displayName` and `blurb` strings, quoted verbatim. */
+/**
+ * Models/QuoteCategory.swift. Names and one-line descriptions are the app's own
+ * `displayName` and `blurb` strings, quoted verbatim.
+ *
+ * WORTH IS FIRST HERE, and it is LAST in the app's enum. That divergence is
+ * deliberate, not drift.
+ *
+ * The Swift enum's order is load bearing in a way this array's is not: it is
+ * `CaseIterable`, so it drives the category picker, and `Worth` was appended
+ * last because it was added last. Reordering it there is an app change with
+ * real consequences. Here the order is presentational and nothing depends on
+ * it, so the site can lead with the category the app is actually for while the
+ * app catches up.
+ *
+ * If the enum is ever reordered to match, delete this comment rather than the
+ * ordering.
+ */
 export const CATEGORIES = [
+  { name: "Worth", blurb: "You are already enough to start." },
   { name: "Discipline", blurb: "Doing it when you do not feel like it." },
   { name: "Confidence", blurb: "Acting before the doubt clears." },
   { name: "Focus", blurb: "One thing, all the way down." },
   { name: "Resilience", blurb: "Getting back up faster." },
   { name: "Ambition", blurb: "Refusing a small horizon." },
-  { name: "Worth", blurb: "You are already enough to start." },
 ] as const;
 
 /** Utilities/ProGate.swift. `freeSlotLimit` and `maxSlotLimit`.

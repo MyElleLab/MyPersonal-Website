@@ -4,6 +4,7 @@ import { Mark } from "./Mark";
 import {
   APP_NAME,
   CONTACT_EMAIL,
+  TAGLINE,
   STUDIO_NAME,
   STUDIO_URL,
 } from "@/lib/site";
@@ -35,8 +36,7 @@ export function Footer() {
               </span>
             </div>
             <p className="mt-4 max-w-sm font-sans text-muted leading-relaxed text-sm">
-              A quote when you asked for one. A goal you actually close.
-              Everything stays on your iPhone.
+              {TAGLINE}
             </p>
             <a
               href={`mailto:${CONTACT_EMAIL}`}

@@ -5,6 +5,7 @@ import { Reveal } from "@/components/Reveal";
 import { AppIcon } from "@/components/AppIcon";
 import { Download } from "@/components/Download";
 import { QuoteMarquee } from "@/components/QuoteMarquee";
+import { WorthSection } from "@/components/WorthSection";
 import {
   APP_NAME,
   CATEGORIES,
@@ -13,6 +14,7 @@ import {
   PRO_FEATURES,
   PRO_SLOTS,
   QUOTE_COUNT,
+  TAGLINE,
 } from "@/lib/site";
 
 /*
@@ -28,35 +30,25 @@ import {
   single hairline and by space. If a block needs more emphasis than its
   neighbours, it gets more space or a heavier weight, never a tint.
 
-  Real quotes carry the page, and they do it twice over, in two different
-  registers that are deliberately kept apart. The marquee under the hero is
-  BREADTH: twenty cards drifting past, none of them demanding to be finished.
-  The pull quote inside the Quotes section is DEPTH: one line at display size
-  in the same face the app sets it in. Putting those two next to each other
-  read as the same idea told twice, which is why the pull quote moved down.
+  THE PAGE ARGUES FOR WORTH, NOT FOR EFFORT. The app's point is that what you
+  are does not rise and fall with what you got done, and five of its six
+  categories are about effort while the one that matters is not. Copy that
+  leads with mechanics describes the product accurately and sells the wrong
+  thing.
 
-  That is the product: the page should look like the app's quote screen before
-  it looks like a marketing page.
+  Two quote treatments, kept apart on purpose. The marquee under the hero is
+  BREADTH: twenty attributed cards drifting past, none demanding to be
+  finished. The Worth section is DEPTH: four unsigned lines at display size,
+  each behind a delivery time. There used to be a third, a Marcus Aurelius
+  pull quote at the largest size on the page, and it was deleted rather than
+  moved: it is an effort-and-virtue line, so the biggest type on the page was
+  arguing against the positioning.
 
   Every number on this page comes from lib/site.ts, which sources each one from
   a named file in the Xcode project. There are no round numbers invented to
   look good.
   ---------------------------------------------------------------------------
 */
-
-/**
- * Quote 53 in Resources/quotes.json, Confidence, public domain. Quoted exactly
- * as the app ships it, including the full stop inside the sentence, so a
- * visitor who downloads the app sees the same line rendered the same way.
- *
- * Deliberately NOT one of the twenty in lib/quotes.ts. It is set at display
- * size in the Quotes section, and a quote appearing both there and in the
- * marquee would look like an accident.
- */
-const PULL_QUOTE = {
-  text: "Waste no more time arguing about what a good man should be. Be one.",
-  author: "Marcus Aurelius",
-};
 
 function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
@@ -86,9 +78,12 @@ export default function HomePage() {
             {APP_NAME}
           </h1>
 
+          {/* The positioning, and the only place on the page it is stated
+              outright. Read from lib/site.ts so the hero, the footer, the
+              search snippet, the link preview and the structured data cannot
+              drift apart. */}
           <p className="mt-6 max-w-[34rem] font-sans text-lg text-muted leading-relaxed animate-fade-up">
-            A quote when you asked for one. A goal you actually close.
-            Everything stays on your iPhone.
+            {TAGLINE}
           </p>
 
           {/* One action, not two. The secondary "How it handles your data"
@@ -113,51 +108,34 @@ export default function HomePage() {
 
       <Rule />
 
+      {/* --------------------------------------------------------------- Worth
+
+          Placed immediately after the marquee and before the mechanics, so the
+          first thing the visitor actually reads is what the app is for rather
+          than how it works. */}
+      <WorthSection />
+
+      <Rule />
+
       {/* -------------------------------------------------------------- Quotes */}
       <section id="quotes" className="section-anchor bg-ground py-24 md:py-32">
         <div className="mx-auto max-w-7xl px-6 md:px-10">
           <Reveal>
             <Eyebrow>Quotes</Eyebrow>
+            {/* Was "{QUOTE_COUNT} lines, delivered when you asked". A count is
+                a boast about quantity, and most of that count is effort
+                content, so the old heading led with the part of the library
+                the app is least about. The number survives in the body below,
+                where it is a fact about working offline rather than a claim. */}
             <h2 className="mt-5 max-w-2xl font-serif text-4xl md:text-5xl tracking-wordmark text-balance leading-[1.05] text-ink">
-              {QUOTE_COUNT} lines, delivered when you asked
+              Choose what you hear, and when
             </h2>
             <p className="mt-5 max-w-[34rem] font-sans text-muted leading-relaxed">
-              You set the times. The app sends one quote at each of them, never
-              the same one twice in a row, chosen from the categories you have
-              switched on. The whole library ships inside the app, so it works
+              You set the times. The app sends one line at each of them, never
+              the same one twice in a row, drawn from the categories you have
+              switched on. All {QUOTE_COUNT} ship inside the app, so it works
               with no signal and nothing is fetched.
             </p>
-          </Reveal>
-
-          {/* The pull quote, MOVED here from directly under the hero.
-
-              It used to sit immediately below the buttons, which is now where
-              the marquee is, and running a wall of quote cards straight into a
-              single large quote read as the same idea told twice. The two are
-              not the same idea, though, so the fix was to separate them rather
-              than to delete one: the marquee shows BREADTH, twenty of them
-              drifting past, and this shows what ONE looks like when it arrives,
-              at the size and in the face the app sets it in. Given a paragraph
-              that has just described a single quote arriving at a time you
-              chose, this is the demonstration of that sentence, and the
-              category grid underneath then says where they come from. */}
-          <Reveal delay={60}>
-            <figure className="mt-14 border-t border-rule pt-12 md:pt-16">
-              {/* The measure is wider than the prose measure and deliberately
-                  so. This is display type, not running text: at 34rem a
-                  three-line quote breaks into six and stops reading as one
-                  utterance. */}
-              <blockquote className="max-w-[44rem] font-serif text-3xl md:text-4xl leading-[1.28] tracking-wordmark text-balance text-ink">
-                {PULL_QUOTE.text}
-              </blockquote>
-              {/* Sans, smaller, no leading punctuation. The app's
-                  Typography+Theme.swift specifies the author line exactly this
-                  way: "the plain name with no leading punctuation of any
-                  kind". */}
-              <figcaption className="mt-6 font-sans text-sm text-muted">
-                {PULL_QUOTE.author}
-              </figcaption>
-            </figure>
           </Reveal>
 
           <Reveal delay={80}>
@@ -195,6 +173,16 @@ export default function HomePage() {
               Write down what you intend to finish and mark it done. Each period
               closes on its own and the next one starts empty. Nothing carries
               over unless you write it again, which is the point.
+            </p>
+            {/* The one place the page reconciles a goals tracker with the
+                claim that your worth does not move with your output. Without
+                it this section reads as belonging to a different app: a
+                completion checklist is output framing by construction. Saying
+                the relationship outright costs three sentences and removes the
+                contradiction rather than hoping nobody notices it. */}
+            <p className="mt-4 max-w-[34rem] font-sans text-muted leading-relaxed">
+              Worth is the floor. Goals are what you do above it. Missing one
+              does not lower the floor.
             </p>
           </Reveal>
 
@@ -328,8 +316,12 @@ export default function HomePage() {
       <section className="bg-ground py-24 md:py-32">
         <div className="mx-auto max-w-7xl px-6 md:px-10">
           <Reveal>
+            {/* Was "Start tomorrow morning", which is habit framing: it asks
+                the reader to commit to a routine, which is the genre this app
+                is positioned against. The close should land on worth, and it
+                should be the last thing read before the footer. */}
             <h2 className="max-w-2xl font-serif text-4xl md:text-5xl tracking-wordmark text-balance leading-[1.05] text-ink">
-              Start tomorrow morning
+              Start from where you already are
             </h2>
             <p className="mt-5 max-w-[34rem] font-sans text-muted leading-relaxed">
               Available in {LANGUAGE_COUNT} languages. Requires an iPhone.

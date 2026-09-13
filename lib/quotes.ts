@@ -32,10 +32,15 @@
  *   4. Spread. Four from each of the five attributed categories, and no author
  *      more than four times, so the row does not read as a Seneca playlist.
  *
- *   5. Not the pull quote. Quote 53, "Waste no more time arguing about what a
- *      good man should be. Be one.", is set at display size further down the
- *      page and is deliberately NOT in this list. One quote appearing in both
- *      places would look like a mistake.
+ *   5. Nothing from the Worth category, which follows from rule 1 and is the
+ *      reason WORTH_SAMPLES below exists. See the note there.
+ *
+ * A NOTE ON QUOTE 53. "Waste no more time arguing about what a good man should
+ * be. Be one." used to be set at display size under the hero, and this list
+ * excluded it to avoid showing one quote twice. That pull quote has since been
+ * deleted: it is an effort-and-virtue line, and it was the largest type on a
+ * page whose argument is worth. Quote 53 is simply not among the twenty now,
+ * and there is no longer a second place it could clash with.
  */
 
 export type MarqueeQuote = {
@@ -57,6 +62,74 @@ export const QUOTES_ROW_A: MarqueeQuote[] = [
   { id: 110, text: "One today is worth two tomorrows.", author: "Benjamin Franklin" },
   { id: 149, text: "Genius is one percent inspiration and ninety-nine percent perspiration.", author: "Thomas Edison" },
   { id: 60, text: "This above all: to thine own self be true.", author: "William Shakespeare" },
+];
+
+/* ---------------------------------------------------------------------------
+   Worth samples
+   --------------------------------------------------------------------------- */
+
+export type WorthSample = {
+  /** The quote's id in the app's quotes.json. */
+  id: number;
+  /** Verbatim. Unsigned, like every Worth entry. */
+  text: string;
+  /** The app's own `toneOfDay` for this entry. Not chosen here, read from the data. */
+  tone: "morning" | "midday" | "afternoon" | "evening";
+  /** A delivery time the app actually offers for that part of the day. */
+  time: string;
+};
+
+/**
+ * Four of the forty Worth lines, one per part of the day.
+ *
+ * WHY THESE CAN BE UNSIGNED HERE WHEN THEY CANNOT BE IN THE MARQUEE
+ *
+ * The marquee excludes them, and that exclusion is correct: a bare card reading
+ * "You are already enough to start" sitting next to a download button is the
+ * SITE addressing the visitor, and an unsigned second-person sentence in a
+ * marketing context reads as a claim the company is making about you.
+ *
+ * The time label is what changes that. "08.00" in front of a line frames it as
+ * a transcript of something the app sends at a time you chose, not as the brand
+ * talking. The reader is overhearing a notification. That frame does the work
+ * an author name would otherwise do, which is why this treatment is a separate
+ * section rather than four more marquee cards.
+ *
+ * The frame is a FACT ABOUT THE DATA, not a device invented for the site. Every
+ * Worth entry in quotes.json carries a `toneOfDay`, ten per part of the day, so
+ * the app already knows when each of these is meant to arrive. The times below
+ * are real options from the app's own delivery picker: 08.00 and 13.00 are two
+ * of the three it preselects, 15.00 is the only Afternoon slot it offers, and
+ * 21.00 is an Evening slot.
+ *
+ * All four verified verbatim against quotes.json by id, including the nil
+ * author and the toneOfDay.
+ */
+export const WORTH_SAMPLES: WorthSample[] = [
+  {
+    id: 205,
+    tone: "morning",
+    time: "08.00",
+    text: "Your value is present the moment you open your eyes.",
+  },
+  {
+    id: 217,
+    tone: "midday",
+    time: "13.00",
+    text: "You are capable in a way that survives your own opinion of it.",
+  },
+  {
+    id: 227,
+    tone: "afternoon",
+    time: "15.00",
+    text: "Tiredness passes through you. You stay.",
+  },
+  {
+    id: 240,
+    tone: "evening",
+    time: "21.00",
+    text: "You already are someone worth being. That was true before today.",
+  },
 ];
 
 /** Row two. Drifts right. */
