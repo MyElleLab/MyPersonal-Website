@@ -14,9 +14,15 @@
  *   2. It is scale-free. The nav wants 20px and the hero wants 96px.
  *   3. It weighs nothing and cannot arrive late, so the nav never reflows.
  *
- * The real 1024px artwork is still shipped, at public/app-icon-light.png and
- * public/app-icon-dark.png, and it is used where the point is to show the icon
- * as it appears on a home screen, not to letter a wordmark. See AppIcon.tsx.
+ * The real 1024px artwork is still shipped, at public/app-icon.png, and it is
+ * used where the point is to show the icon as it appears on a home screen
+ * rather than to letter a wordmark. See AppIcon.tsx, which pins it to the
+ * primary black-on-white in both schemes for exactly that reason.
+ *
+ * This mark does the opposite and should: it is half of a wordmark lockup with
+ * the "(E)go" text beside it, so it inherits currentColor like every other
+ * piece of chrome. Pinning it to black-on-white would put a white chip in a
+ * black nav bar, which reads as a broken image rather than as a mark.
  *
  * `optical` nudges the glyph up by a hair. A capital E centred on its bounding
  * box sits visibly low next to lowercase text because the box has no descender

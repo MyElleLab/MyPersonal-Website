@@ -3,19 +3,29 @@ import Image from "next/image";
 /**
  * The real app icon, as it appears on a home screen.
  *
- * Two files rather than one, swapped by `prefers-color-scheme`. This is the
- * one place on the site where a raster is correct: the point is to show the
- * artwork the user will tap, and the icon's ground is part of that artwork.
- * The Mark component renders the letter as type for every other use.
+ * ONE FILE, FIXED IN BOTH SCHEMES, and that is the point rather than an
+ * oversight. This used to ship two rasters swapped by `prefers-color-scheme`,
+ * so a visitor in dark mode saw the inverse mark, white E on black. That was
+ * wrong: this is the App Store artwork. It is what will sit on the visitor's
+ * home screen and what they will scan for in a search result, and an icon that
+ * changes with the page's theme is not the icon. Everything else on the site
+ * still follows the system.
  *
- * The swap is CSS rather than JS. A `<picture>` with a media source would also
- * work, but next/image does not emit one, and doing it in JS would mean the
- * wrong icon on first paint. Both images are in the DOM and one is hidden,
- * which costs a second 12KB request and buys a scheme change with no flash.
+ * The app does ship an alternate inverse icon, Pro gated, and this is not it.
+ * `RCConfig.AppIcon.primaryName` is nil, meaning black E on white, and its
+ * comment says that is "what ships in the App Store listing".
+ *
+ * A raster is correct here, unlike everywhere else on the site, because the
+ * icon's white ground is part of the artwork. The Mark component renders the
+ * letter as type for the nav and footer lockups, where the mark is a wordmark
+ * rather than a depiction of the product and should inherit the page's colour.
  *
  * `rounded-[22.37%]` is the iOS superellipse corner as a percentage of the
  * icon's width, which is how Apple specifies it. A fixed px radius would be
  * right at exactly one size and visibly wrong at every other.
+ *
+ * The hairline border is what stops a white icon dissolving into a white page
+ * in light mode. In dark mode it does nothing visible and costs nothing.
  */
 export function AppIcon({
   size = 96,
@@ -24,31 +34,14 @@ export function AppIcon({
   size?: number;
   className?: string;
 }) {
-  const shared =
-    "rounded-[22.37%] border border-rule object-cover";
-
   return (
-    <div
-      className={`relative shrink-0 ${className}`}
-      style={{ width: size, height: size }}
-    >
-      <Image
-        src="/app-icon-light.png"
-        alt="The (E)go app icon"
-        width={size}
-        height={size}
-        priority
-        className={`${shared} block dark:hidden`}
-      />
-      <Image
-        src="/app-icon-dark.png"
-        alt=""
-        aria-hidden
-        width={size}
-        height={size}
-        priority
-        className={`${shared} hidden dark:block`}
-      />
-    </div>
+    <Image
+      src="/app-icon.png"
+      alt="The (E)go app icon"
+      width={size}
+      height={size}
+      priority
+      className={`shrink-0 rounded-[22.37%] border border-rule object-cover ${className}`}
+    />
   );
 }

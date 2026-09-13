@@ -37,7 +37,7 @@ export function appSchema(): Record<string, unknown> {
     applicationCategory: "LifestyleApplication",
     operatingSystem: "iOS",
     url: SITE_URL,
-    image: absoluteUrl("/app-icon-light.png"),
+    image: absoluteUrl("/app-icon.png"),
     /* Shared with the hero, the footer and the page metadata. See TAGLINE. */
     description: TAGLINE,
     publisher: {
