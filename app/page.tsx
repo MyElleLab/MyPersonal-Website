@@ -4,6 +4,7 @@ import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
 import { AppIcon } from "@/components/AppIcon";
 import { Download } from "@/components/Download";
+import { QuoteMarquee } from "@/components/QuoteMarquee";
 import {
   APP_NAME,
   CATEGORIES,
@@ -27,9 +28,15 @@ import {
   single hairline and by space. If a block needs more emphasis than its
   neighbours, it gets more space or a heavier weight, never a tint.
 
-  One real quote is set at display size in the hero, in the same face the app
-  sets it in. That is the product: the page should look like the app's quote
-  screen before it looks like a marketing page.
+  Real quotes carry the page, and they do it twice over, in two different
+  registers that are deliberately kept apart. The marquee under the hero is
+  BREADTH: twenty cards drifting past, none of them demanding to be finished.
+  The pull quote inside the Quotes section is DEPTH: one line at display size
+  in the same face the app sets it in. Putting those two next to each other
+  read as the same idea told twice, which is why the pull quote moved down.
+
+  That is the product: the page should look like the app's quote screen before
+  it looks like a marketing page.
 
   Every number on this page comes from lib/site.ts, which sources each one from
   a named file in the Xcode project. There are no round numbers invented to
@@ -41,8 +48,12 @@ import {
  * Quote 53 in Resources/quotes.json, Confidence, public domain. Quoted exactly
  * as the app ships it, including the full stop inside the sentence, so a
  * visitor who downloads the app sees the same line rendered the same way.
+ *
+ * Deliberately NOT one of the twenty in lib/quotes.ts. It is set at display
+ * size in the Quotes section, and a quote appearing both there and in the
+ * marquee would look like an accident.
  */
-const HERO_QUOTE = {
+const PULL_QUOTE = {
   text: "Waste no more time arguing about what a good man should be. Be one.",
   author: "Marcus Aurelius",
 };
@@ -80,41 +91,25 @@ export default function HomePage() {
             Everything stays on your iPhone.
           </p>
 
-          <div className="mt-10 flex flex-wrap items-center gap-4 animate-fade-up">
+          {/* One action, not two. The secondary "How it handles your data"
+              link was removed: the nav already carries Privacy on every page,
+              and a hero with a single button states the one thing it wants
+              rather than offering a choice between downloading and reading a
+              policy. */}
+          <div className="mt-10 animate-fade-up">
             <Download />
-            <a
-              href="#privacy"
-              className="inline-flex items-center rounded-full border border-rule px-6 py-3.5 text-sm font-sans font-medium text-ink hover:bg-surface transition"
-            >
-              How it handles your data
-            </a>
           </div>
         </div>
       </section>
 
-      {/* ------------------------------------------------------- The quote itself */}
-      <section className="relative bg-ground pb-24 md:pb-32">
-        <div className="mx-auto max-w-7xl px-6 md:px-10">
-          <Reveal>
-            <figure className="border-t border-rule pt-12 md:pt-16">
-              {/* The measure is wider than the prose measure and deliberately
-                  so. This is display type, not running text: at 34rem a
-                  three-line quote breaks into six and stops reading as one
-                  utterance. */}
-              <blockquote className="max-w-[44rem] font-serif text-3xl md:text-4xl leading-[1.28] tracking-wordmark text-balance text-ink">
-                {HERO_QUOTE.text}
-              </blockquote>
-              {/* Sans, smaller, no leading punctuation. The app's
-                  Typography+Theme.swift specifies the author line exactly this
-                  way: "the plain name with no leading punctuation of any
-                  kind". */}
-              <figcaption className="mt-6 font-sans text-sm text-muted">
-                {HERO_QUOTE.author}
-              </figcaption>
-            </figure>
-          </Reveal>
-        </div>
-      </section>
+      {/* -------------------------------------------------------------- Marquee
+
+          Full bleed, so it sits outside the max-w-7xl container above. The
+          cards run to both screen edges and dissolve into the ground rather
+          than stopping at the gutter. */}
+      <div className="pb-20 md:pb-28">
+        <QuoteMarquee />
+      </div>
 
       <Rule />
 
@@ -132,6 +127,37 @@ export default function HomePage() {
               switched on. The whole library ships inside the app, so it works
               with no signal and nothing is fetched.
             </p>
+          </Reveal>
+
+          {/* The pull quote, MOVED here from directly under the hero.
+
+              It used to sit immediately below the buttons, which is now where
+              the marquee is, and running a wall of quote cards straight into a
+              single large quote read as the same idea told twice. The two are
+              not the same idea, though, so the fix was to separate them rather
+              than to delete one: the marquee shows BREADTH, twenty of them
+              drifting past, and this shows what ONE looks like when it arrives,
+              at the size and in the face the app sets it in. Given a paragraph
+              that has just described a single quote arriving at a time you
+              chose, this is the demonstration of that sentence, and the
+              category grid underneath then says where they come from. */}
+          <Reveal delay={60}>
+            <figure className="mt-14 border-t border-rule pt-12 md:pt-16">
+              {/* The measure is wider than the prose measure and deliberately
+                  so. This is display type, not running text: at 34rem a
+                  three-line quote breaks into six and stops reading as one
+                  utterance. */}
+              <blockquote className="max-w-[44rem] font-serif text-3xl md:text-4xl leading-[1.28] tracking-wordmark text-balance text-ink">
+                {PULL_QUOTE.text}
+              </blockquote>
+              {/* Sans, smaller, no leading punctuation. The app's
+                  Typography+Theme.swift specifies the author line exactly this
+                  way: "the plain name with no leading punctuation of any
+                  kind". */}
+              <figcaption className="mt-6 font-sans text-sm text-muted">
+                {PULL_QUOTE.author}
+              </figcaption>
+            </figure>
           </Reveal>
 
           <Reveal delay={80}>

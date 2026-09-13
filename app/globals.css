@@ -110,6 +110,12 @@ body {
     opacity: 1 !important;
     transform: none !important;
   }
+
+  /* The marquee's reduced-motion rules are NOT here. They live immediately
+     after the .marquee block further down, because they override properties
+     that block also sets and the later rule has to win. Putting them here
+     cost the mask override once already: same specificity, earlier in the
+     file, silently lost. */
 }
 
 /* The nav is fixed, so a hash jump would otherwise land a section flush
@@ -120,6 +126,177 @@ body {
 
 .text-balance {
   text-wrap: balance;
+}
+
+/* ---------------------------------------------------------------------------
+   Quote marquee
+
+   Two rows drifting in opposite directions, with the card set duplicated so
+   the loop closes on itself. See components/QuoteMarquee.tsx.
+
+   SPEED, which is the only real decision here.
+
+   The target is 32 pixels per second. That is slow. It is deliberately slow,
+   because these cards carry sentences the visitor is meant to actually read,
+   and a marquee fast enough to feel energetic is a marquee nobody reads. For
+   comparison, a logo marquee typically runs 60 to 100 px/s, which works
+   because you recognise a logo rather than read it.
+
+   At 32 px/s a 336px column takes about 10.5 seconds to advance by its own
+   width, and a card is on a 1440px screen for roughly a minute. That is far
+   longer than the two to three seconds these sentences need, so the reader is
+   never chasing one. The motion is still clearly motion: 32px in a second is
+   well above the threshold where a thing reads as static.
+
+   The duration is DERIVED from that speed, not chosen. Half the track is
+   10 cards x (card width + gap), so:
+
+       desktop   10 x (320 + 16) = 3360px  /  32 px/s  =  105s
+       mobile    10 x (260 + 16) = 2760px  /  32 px/s  =   86s
+
+   Two durations rather than one, so the felt speed is the same at both sizes.
+   A single duration would make the narrower mobile track drift noticeably
+   slower. If you change --q-card-w or the gap, recompute the duration. A
+   marquee whose speed depends on the breakpoint is the usual bug here.
+   --------------------------------------------------------------------------- */
+
+.marquee {
+  --q-card-w: 260px;
+  --q-gap: 16px;
+  --marquee-duration: 86s;
+
+  position: relative;
+  overflow: hidden;
+  /* Cards emerge and dissolve rather than being cut off at a hard edge. The
+     mask is on the clipping container, so it fades whatever is under it
+     regardless of the row's position. Both properties are required: Safari
+     still wants the prefixed one. */
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 10%,
+    #000 90%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    #000 10%,
+    #000 90%,
+    transparent 100%
+  );
+}
+
+@media (min-width: 768px) {
+  .marquee {
+    --q-card-w: 320px;
+    --marquee-duration: 105s;
+  }
+}
+
+.marquee-track {
+  display: flex;
+  /* NO `gap` here, and this is not a style preference.
+     `gap` puts space BETWEEN items, so a track of 2N cards has 2N-1 gaps and
+     translating by -50% moves 10W + 9.5G while the first copy actually
+     occupies 10W + 10G. The half-gap difference is 8px, which shows up as a
+     small jump on every loop. Carrying the gap as margin-right on each card
+     instead makes every card occupy exactly W+G, so half the track is exactly
+     the first copy and -50% lands seamlessly. The trailing margin on the last
+     card is what makes the arithmetic work; it is invisible because the track
+     is clipped. */
+  width: max-content;
+  /* Equal height across a row, so the two rows read as two lines rather than
+     as a ragged pile. The tallest card in the row sets it. */
+  align-items: stretch;
+  animation: marquee-left var(--marquee-duration) linear infinite;
+  /* The track is far wider than the screen and moving. Without this the
+     browser repaints the whole strip every frame. */
+  will-change: transform;
+}
+
+.marquee-track--reverse {
+  animation-name: marquee-right;
+}
+
+/* Optional and deliberate: stopping on hover is the cheapest possible
+   accommodation for the one visitor who wants to finish reading a card.
+   Applied to the whole marquee so hovering either row stops both, which
+   avoids the odd effect of one line freezing while the other slides. */
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+/* -50% because the card set is rendered twice inside the track. When the
+   first copy has fully left, the second sits exactly where the first began,
+   so resetting to 0 is invisible. */
+@keyframes marquee-left {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes marquee-right {
+  from {
+    transform: translate3d(-50%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.marquee-card {
+  flex: 0 0 var(--q-card-w);
+  width: var(--q-card-w);
+  /* The gap, carried per card so the loop maths is exact. See .marquee-track. */
+  margin-right: var(--q-gap);
+}
+
+/* ---------------------------------------------------------------------------
+   Marquee under prefers-reduced-motion.
+
+   This block MUST stay after the .marquee rules above. It overrides the mask
+   and the transform that those rules set, at the same specificity, so the
+   cascade decides on source order alone. It was originally written up with the
+   other reduced-motion rules and the mask override silently lost.
+   --------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  /* It STOPS. It does not slow down. A slowed marquee is still motion, and
+     motion is the thing the preference is about.
+
+     `transform` matters as much as `animation`: the reverse row's keyframes
+     begin at -50%, so killing only the animation would park it half a track
+     left, showing the tail of the aria-hidden duplicate. Resetting the
+     transform puts both rows at the first real card. */
+  .marquee-track {
+    animation: none;
+    transform: none;
+    will-change: auto;
+  }
+
+  /* With nothing moving, the left fade is no longer softening an entrance. It
+     is just greying out the first card of a row the reader can now take their
+     time over, which is the opposite of what reduced motion is for. So the
+     left fade goes and the right one stays: the row is still clipped on the
+     right, and the fade is what tells you it continues. */
+  .marquee {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      #000 0%,
+      #000 90%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to right,
+      #000 0%,
+      #000 90%,
+      transparent 100%
+    );
+  }
 }
 
 /* A rule that fades out at both ends. Used between sections where a full
