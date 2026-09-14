@@ -55,7 +55,7 @@ export const SITE_NAME = APP_NAME;
  * snippet, the link preview and the structured data.
  */
 export const TAGLINE =
-  "Your worth does not move with your output. A few lines a day to say so. Everything stays on your iPhone.";
+  "The app that reminds you that you are the best. Everything stays on your iPhone.";
 
 /**
  * The search snippet and link preview. The tagline plus the privacy claim,

@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Mark } from "./Mark";
-import { APP_SHORT_NAME } from "@/lib/site";
+import { Wordmark } from "./Wordmark";
+import { APP_NAME, APP_SHORT_NAME } from "@/lib/site";
 
 /**
  * Root-relative hashes, not bare ones. This nav is rendered on /privacy and
@@ -41,23 +41,22 @@ export function Nav() {
       ].join(" ")}
     >
       <nav className="mx-auto max-w-7xl px-6 md:px-10 h-16 flex items-center justify-between">
+        {/* The same icon-plus-go lockup as the hero. It used to be a bordered
+            E tile sitting next to the text "(E)go", which told the joke twice:
+            the icon supplied an E and then the text spelled one out anyway.
+            One lockup component now serves the nav, the footer and the hero. */}
         <Link
           href="/"
-          className="flex items-center gap-2.5 text-ink"
-          /* The mark is aria-hidden, so without this the link would announce
-             as its own URL. */
+          className="flex items-center text-ink"
+          /* Wordmark carries its own sr-only name, but the LINK needs its own
+             accessible name or it announces as its URL. */
           aria-label={`${APP_SHORT_NAME}, home`}
         >
-          <span className="grid size-7 shrink-0 place-items-center rounded-md border border-rule">
-            <Mark size={17} />
-          </span>
-          {/* Desktop only. Three links plus the wordmark do fit a 390px
-              phone, but only by eating the side gutter; the mark alone
-              carries the brand at this size and the aria-label above keeps
-              the link named. */}
-          <span className="hidden sm:inline font-serif tracking-wordmark text-[19px]">
-            {APP_SHORT_NAME}
-          </span>
+          <Wordmark
+            trailing=""
+            label={APP_NAME}
+            className="font-serif tracking-wordmark text-[19px] leading-none"
+          />
         </Link>
 
         <ul className="flex items-center gap-0.5 md:gap-2 text-sm font-sans">

@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import Link from "next/link";
-import { Mark } from "./Mark";
+import { Wordmark } from "./Wordmark";
 import {
   APP_NAME,
   CONTACT_EMAIL,
@@ -27,14 +27,11 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-6 md:px-10 py-16">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
           <div className="md:col-span-6">
-            <div className="flex items-center gap-2.5">
-              <span className="grid size-8 shrink-0 place-items-center rounded-md border border-rule">
-                <Mark size={19} />
-              </span>
-              <span className="font-serif tracking-wordmark text-xl text-ink">
-                {APP_NAME}
-              </span>
-            </div>
+            {/* Same lockup as the nav and the hero. */}
+            <Wordmark
+              trailing=": MyPersonal Success"
+              className="font-serif tracking-wordmark text-xl text-ink"
+            />
             <p className="mt-4 max-w-sm font-sans text-muted leading-relaxed text-sm">
               {TAGLINE}
             </p>

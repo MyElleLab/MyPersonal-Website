@@ -129,10 +129,12 @@ body {
 }
 
 /* ---------------------------------------------------------------------------
-   Hero wordmark: the app icon set inline as the E of "(E)go".
+   Wordmark: the app icon standing in for the E of "Ego".
 
    EVERY NUMBER HERE IS MEASURED. Re-derive them if the icon artwork or the
-   display face changes; do not nudge them by eye.
+   display face changes; do not nudge them by eye. Used at 19px in the nav,
+   20px in the footer and 72px in the hero from this one rule, because every
+   value is in `em`.
 
    Measured from public/app-icon.png (ink bounding box of the E):
        cap height      0.6182 of the box
@@ -142,75 +144,57 @@ body {
 
    Measured from the h1's own stack, ui-serif resolving to New York:
        cap height      0.6968em
-       E advance       0.6338em, with ~0.055em of ink gap either side
-       ( and )         0.4189em advance
+       g left bearing  0.0391em
+       E side bearings 0.0371em left, 0.0376em right
 
    CAP HEIGHT. To put the icon's E on the text's cap height the box must be
-   0.6968 / 0.6182 = 1.1272em. Verified against the DOM at 72px: 0px error.
+   0.6968 / 0.6182 = 1.1272em. Verified against the DOM: 0px error, and it
+   holds from 16px to 200px because it is an em.
 
-   WHY THE TILE IS CROPPED, which is the part that makes this read as a word.
+   BASELINE. `vertical-align: baseline` puts the BOX BOTTOM on the baseline, so
+   the letter inside floats up by its own bottom padding. Push it back down by
+   exactly that padding, 0.1904 of the box.
 
-   The tile is OPAQUE. It cannot be negatively margined into the parentheses
-   the way a glyph would be letterspaced: pulled in far enough to sit at a
-   normal letter gap, its white ground simply paints over the "(" and the ")".
-   Left uncropped and spaced as a box instead, its own 0.28em of internal dead
-   space on each side pushes the E about six times further from the brackets
-   than a real E sits, and the line reads as a logo with text beside it.
+   A previous revision carried 21.1% here, on the theory that the 1px border
+   needed compensating under `box-sizing: border-box`. It does not. That number
+   came from a standalone probe with no Tailwind preflight, where the box was
+   content-sized. In the real stylesheet it put the letter 1.67px BELOW the
+   baseline. Measure in the page you are shipping, not in a probe.
 
-   So the window below is narrower than the artwork and clips it. Only empty
-   margin is removed: the E, its ground and its vertical proportions are
-   untouched. The consequence, and it is a real one, is that the mark is a
-   rounded rectangle rather than the icon's square silhouette.
+   THE ICON IS SQUARE, and the gap to the "go" is a consequence of that.
+
+   The bracketed version cropped this to a 0.78em window so the tile's dead
+   side margin would not collide with the "(" and ")". There are no brackets
+   now, so the crop is gone and the artwork renders 1:1, which is the whole
+   point: the App Store silhouette appears on the page again.
+
+   That leaves 0.2822 of the box, about 0.318em, as empty white between the E's
+   ink and the tile's right edge, against the roughly 0.06em a real letter pair
+   would sit at. DO NOT try to close it with a negative margin. The tile is
+   opaque and paints before the text, so the "g" would land on top of the white
+   ground: merely odd in light mode, and invisible in dark mode where the text
+   is near-white on a white tile. The gap is the price of the square.
    --------------------------------------------------------------------------- */
 
-.wordmark-slot {
-  --wm-box: 1.1272em; /* cap-matched square: 0.6968 / 0.6182 */
-  --wm-window: 0.78em; /* cropped width; the E ink is 0.4943em of it */
+.wordmark-icon {
+  /* Cap-matched square: 0.6968 / 0.6182. */
+  width: 1.1272em;
+  height: 1.1272em;
 
   display: inline-block;
-  position: relative;
-  overflow: hidden;
-
-  width: var(--wm-window);
-  height: var(--wm-box);
-
-  /* The crop removes the superellipse corners, so the window carries its own.
-     26% of the narrower axis lands visually where 22.37% of the square did. */
-  border-radius: 26%;
+  /* The true iOS superellipse corner as a fraction of the width, which is how
+     Apple specifies it. A px radius would be right at exactly one size. */
+  border-radius: 22.37%;
   /* Without this a white tile dissolves into a white page in light mode. */
   border: 1px solid var(--rule);
 
-  /* `vertical-align: baseline` puts the BOX BOTTOM on the baseline, so the
-     letter inside floats up by its own bottom padding. Push it back down by
-     exactly that padding: 0.1904 of the box, measured off the PNG.
-
-     Verified against the DOM at 72px: 0.00px error. 19.5% gives +0.38px and
-     18.5% gives -0.44px, so this is the value, not an approximation of it.
-
-     A previous revision carried 21.1% here, on the theory that the 1px border
-     needed compensating under `box-sizing: border-box`. It does not. That
-     number came from a standalone probe with no Tailwind preflight, where the
-     box was content-sized and the geometry genuinely differed. In the real
-     stylesheet it put the letter 1.67px BELOW the baseline. Measure in the
-     page you are shipping, not in a probe. */
   vertical-align: baseline;
   transform: translateY(19.04%);
 
-  /* Closes the parens' own side bearings. Small, because the tile is opaque
-     and anything larger overlaps them. */
+  /* Closes the tile's own left dead margin against whatever precedes it. Small,
+     because the tile is opaque and more would overlap. */
   margin-left: -0.03em;
-  margin-right: -0.03em;
-}
 
-.wordmark-icon {
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  /* The full square, centred in the narrower window. Width and height are the
-     BOX, not the window: that is what makes this a crop rather than a squash. */
-  width: var(--wm-box);
-  height: var(--wm-box);
   max-width: none; /* defeats the preflight img{max-width:100%} */
 }
 

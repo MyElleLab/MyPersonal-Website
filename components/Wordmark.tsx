@@ -1,76 +1,89 @@
 import { APP_NAME } from "@/lib/site";
 
 /**
- * The hero wordmark: the app icon set inline as the E of "(E)go".
+ * The wordmark: the app icon standing in for the E, followed by "go".
  *
- * The point is that the reader assembles "(E)go: MyPersonal Success" with the
- * icon supplying the E, rather than seeing a logo with a title next to it. That
- * is a typographic problem, and every number in `.wordmark-*` in globals.css is
- * measured rather than chosen. The derivations live there.
+ * ONE COMPONENT FOR ALL THREE PLACES. The hero, the nav and the footer used to
+ * be two different implementations, a cropped image inline in the hero and a
+ * New York "E" as type in the other two. They are one thing now, so a change to
+ * the lockup cannot land in one place and miss the others.
  *
- * THE OPENING PARENTHESIS STAYS, as a text glyph before the icon.
+ * NO BRACKETS. The mark reads "Ego", not "(E)go". That is a deliberate change,
+ * and the product's NAME is unaffected: it is still "(E)go: MyPersonal Success"
+ * in the App Store, in the metadata, in the schema and in the accessible name
+ * below. The wordmark is a mark; APP_NAME is the name. See lib/site.ts.
  *
- * The tile cannot stand in for it. A "(" is a thin curved stroke; the icon is a
- * filled superellipse, and nothing about it reads as a bracket. Rendered
- * without the "(", the line reads "Ego" with an orphan ")" that looks like a
- * typo rather than a device. Checked both ways before deciding.
+ * THE ICON IS SQUARE. It was cropped to a 0.78em window in the bracketed
+ * version, purely to pull its dead side margin out of collision with the "("
+ * and ")". With no brackets there is nothing to collide with, so the crop is
+ * gone and the artwork renders at its true 1:1 aspect, superellipse corners
+ * and all. The page shows the real App Store silhouette again.
  *
- * ACCESSIBILITY
+ * The consequence is a wide gap before the "go", because the artwork carries
+ * 0.28 of its own width as empty margin on that side. It cannot be closed with
+ * a negative margin: the tile is opaque and comes first in paint order, so the
+ * "g" would render ON TOP of the white ground. In light mode that is merely
+ * odd; in dark mode the text is near-white and the tile is white, so the "g"
+ * would disappear. The gap is measured and reported rather than fought.
  *
- * The h1 carries the real name as a visually hidden text node and the visual
- * assembly is `aria-hidden`, so the heading announces exactly
- * "(E)go: MyPersonal Success" with no image and no stray ")go".
+ * ALIGNMENT is in `em` throughout, so one set of numbers serves 19px in the nav
+ * and 72px in the hero. Verified: cap and baseline error stay under 0.011px
+ * from 16px to 200px. See the .wordmark-* rules in app/globals.css.
  *
- * A text node rather than `aria-label` on purpose: it survives translation
- * tooling, it stays selectable, and it keeps real text content in the heading.
+ * ACCESSIBILITY. Every instance carries the real name as a visually hidden text
+ * node with the visual assembly aria-hidden, so the announced name is always
+ * "(E)go: MyPersonal Success" no matter what the mark looks like.
  *
- * IF THE ICON FAILS TO LOAD
- *
- * `alt="E"` means the browser renders the letter in the inherited serif and the
- * line still reads "(E)go: MyPersonal Success". The alt sits inside the
- * aria-hidden subtree so it never reaches the accessibility tree; it exists
- * only for that failure. It must never be "".
- *
- * A PLAIN <img>, NOT next/image, and this is the reason.
- *
- * next/image writes `style="color:transparent"` inline on the element. That is
- * sensible for a photograph, where a flash of alt text during load is noise,
- * and it is fatal here: a transparent colour makes the alt text invisible, so
- * a blocked image rendered "( )go: MyPersonal Success" with the E simply gone.
- * Caught by actually blocking the request rather than by reasoning about it.
- *
- * An inline style beats a class, so the fix is not a CSS override; it is not
- * using the component. Nothing is lost. The file is a 12KB PNG shown at about
- * 81px, so the optimizer has nothing to do, and the plain tag lets the CSS own
- * the geometry outright.
+ * A PLAIN <img>, NOT next/image. next/image writes style="color:transparent"
+ * inline, which makes alt text invisible; a blocked image then rendered "go"
+ * with no E at all. Proven by blocking the request, not reasoned about.
  */
-export function Wordmark({ className = "" }: { className?: string }) {
-  return (
-    <h1 className={className}>
-      <span className="sr-only">{APP_NAME}</span>
 
+/** The icon, inline, sized to the surrounding cap height. */
+function InlineIcon() {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src="/app-icon.png"
+      alt="E"
+      width={1024}
+      height={1024}
+      fetchPriority="high"
+      decoding="sync"
+      className="wordmark-icon"
+    />
+  );
+}
+
+/**
+ * @param as        heading level for the hero, plain span elsewhere.
+ * @param trailing  what follows the icon. "go" in the nav, the full name in
+ *                  the hero and footer. Never includes the E: the icon is it.
+ */
+export function Wordmark({
+  as = "span",
+  trailing,
+  className = "",
+  label = APP_NAME,
+}: {
+  as?: "h1" | "span";
+  trailing: string;
+  className?: string;
+  label?: string;
+}) {
+  const Tag = as;
+  return (
+    <Tag className={className}>
+      <span className="sr-only">{label}</span>
       <span aria-hidden="true">
-        {/* One unbreakable unit. Without this the icon can be left alone on a
-            line when the heading wraps, which looks broken. The colon is
-            inside the group because a colon should not begin a line. */}
+        {/* The icon and the syllable it starts are one unbreakable unit, so a
+            wrapping heading can never strand the icon alone on a line. */}
         <span className="whitespace-nowrap">
-          (
-          <span className="wordmark-slot">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/app-icon.png"
-              alt="E"
-              width={1024}
-              height={1024}
-              fetchPriority="high"
-              decoding="sync"
-              className="wordmark-icon"
-            />
-          </span>
-          )go:
-        </span>{" "}
-        MyPersonal Success
+          <InlineIcon />
+          go
+        </span>
+        {trailing}
       </span>
-    </h1>
+    </Tag>
   );
 }

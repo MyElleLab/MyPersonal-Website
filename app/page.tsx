@@ -77,7 +77,7 @@ export default function HomePage() {
               to even their lengths, which can strand "MyPersonal Success" and
               leave the nowrap group alone on line one. Natural wrapping keeps
               the group with as much of the name as fits. */}
-          <Wordmark className="font-serif text-5xl sm:text-6xl md:text-7xl tracking-wordmark leading-[1.03] text-ink animate-fade-up" />
+          <Wordmark as="h1" trailing=": MyPersonal Success" className="font-serif text-5xl sm:text-6xl md:text-7xl tracking-wordmark leading-[1.03] text-ink animate-fade-up" />
 
           {/* The positioning, and the only place on the page it is stated
               outright. Read from lib/site.ts so the hero, the footer, the
