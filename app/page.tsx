@@ -2,12 +2,11 @@ import Link from "next/link";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { Reveal } from "@/components/Reveal";
-import { AppIcon } from "@/components/AppIcon";
 import { Download } from "@/components/Download";
+import { Wordmark } from "@/components/Wordmark";
 import { QuoteMarquee } from "@/components/QuoteMarquee";
 import { WorthSection } from "@/components/WorthSection";
 import {
-  APP_NAME,
   CATEGORIES,
   FREE_SLOTS,
   LANGUAGE_COUNT,
@@ -70,13 +69,15 @@ export default function HomePage() {
       {/* ---------------------------------------------------------------- Hero */}
       <section className="relative bg-ground pt-36 pb-20 md:pt-48 md:pb-28">
         <div className="mx-auto max-w-7xl px-6 md:px-10">
-          <div className="animate-fade-in">
-            <AppIcon size={80} />
-          </div>
+          {/* The icon is no longer a separate block above the title. It is
+              the E, set inline. See components/Wordmark.tsx and the
+              .wordmark-* rules in globals.css.
 
-          <h1 className="mt-10 font-serif text-5xl sm:text-6xl md:text-7xl tracking-wordmark text-balance leading-[1.03] text-ink animate-fade-up">
-            {APP_NAME}
-          </h1>
+              No text-balance here. Balancing redistributes words across lines
+              to even their lengths, which can strand "MyPersonal Success" and
+              leave the nowrap group alone on line one. Natural wrapping keeps
+              the group with as much of the name as fits. */}
+          <Wordmark className="font-serif text-5xl sm:text-6xl md:text-7xl tracking-wordmark leading-[1.03] text-ink animate-fade-up" />
 
           {/* The positioning, and the only place on the page it is stated
               outright. Read from lib/site.ts so the hero, the footer, the

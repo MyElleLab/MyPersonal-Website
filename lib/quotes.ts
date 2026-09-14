@@ -132,6 +132,72 @@ export const WORTH_SAMPLES: WorthSample[] = [
   },
 ];
 
+/**
+ * The Worth cards that ride in the marquee, two per row.
+ *
+ * WHY THESE CAN SIT NEXT TO EPICTETUS WITHOUT READING AS A MISSING AUTHOR
+ *
+ * Two signals, because either alone is weaker.
+ *
+ *   1. The card INVERTS. Ink ground, ground-coloured text. In a row of hairline
+ *      cards on a page with no accent colour, value inversion is the only
+ *      strong emphasis the design system has, and it is unmistakable without
+ *      reading a word. That is the at-a-glance test.
+ *   2. The TIME sits where the author sits. Numerals against names differ in
+ *      shape before they differ in meaning, so this also survives a fast scan,
+ *      and it says what kind of thing the card is rather than only that it is
+ *      a different kind.
+ *
+ * Inversion alone would read as "featured quote". The time alone would read as
+ * a missing author in small grey type. Together they read as a notification.
+ *
+ * The label is the bare time, not "Sent at 07.00". The Worth section further
+ * down the page answers the question this raises, which is the sequence: the
+ * marquee poses it, the section explains it.
+ *
+ * FOUR, WHICH IS ONE IN SIX OF THE TWENTY-FOUR CARDS.
+ *
+ * Not an arbitrary dose. The library is 40 Worth out of 240, exactly one in
+ * six, so the marquee's mix mirrors the library's own. Enough that Worth is
+ * present, not so much that the row stops being a showcase of the attributed
+ * library.
+ *
+ * Deliberately NOT the same four as WORTH_SAMPLES above. A line appearing in
+ * both the marquee and the Worth section would make the page look like it
+ * repeats itself, and it would cost the section its "here are the ones we
+ * chose to show you" quality. Different times too, except 15.00, which is
+ * unavoidable because it is the only Afternoon slot the app offers.
+ *
+ * All four verified verbatim against quotes.json by id, including the nil
+ * author and the toneOfDay.
+ */
+export const MARQUEE_WORTH: WorthSample[] = [
+  {
+    id: 202,
+    tone: "morning",
+    time: "07.00",
+    text: "What you are is settled. Begin as yourself.",
+  },
+  {
+    id: 220,
+    tone: "midday",
+    time: "12.00",
+    text: "Doubting yourself and being wrong about yourself are different things.",
+  },
+  {
+    id: 221,
+    tone: "afternoon",
+    time: "15.00",
+    text: "There is exactly one of whatever you are.",
+  },
+  {
+    id: 232,
+    tone: "evening",
+    time: "19.00",
+    text: "Sleep changes how you feel. It leaves what you are alone.",
+  },
+];
+
 /** Row two. Drifts right. */
 export const QUOTES_ROW_B: MarqueeQuote[] = [
   { id: 81, text: "Concentration is the secret of strength.", author: "Ralph Waldo Emerson" },
