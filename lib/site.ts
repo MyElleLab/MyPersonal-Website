@@ -54,16 +54,21 @@ export const SITE_NAME = APP_NAME;
  * because the four that are wrong are the ones nobody looks at: the search
  * snippet, the link preview and the structured data.
  */
-export const TAGLINE =
-  "The app that reminds you that you are the best. Everything stays on your iPhone.";
+export const TAGLINE = "The app that reminds you that you are the best.";
 
 /**
- * The search snippet and link preview. The tagline plus the privacy claim,
- * because a description has room for it and the hero does not.
+ * The search snippet. Longer than the tagline on purpose.
  *
- * Derived rather than retyped, so the two cannot disagree about the product.
+ * "Everything stays on your iPhone" was cut from the hero, where the tagline
+ * now stands alone, but it is a real selling point and a search result has
+ * room for it. So it survives HERE and in the Privacy section, rather than
+ * disappearing from the site because it left one heading.
+ *
+ * Derived from TAGLINE rather than retyped, so the two cannot disagree about
+ * what the product is.
  */
-export const META_DESCRIPTION = `${TAGLINE} No account, no analytics.`;
+export const META_DESCRIPTION =
+  `${TAGLINE} Everything stays on your iPhone. No account, no analytics.`;
 
 export const STUDIO_NAME = "MyElleLab";
 export const STUDIO_URL = "https://myellelab.com";
@@ -81,17 +86,22 @@ export const CONTACT_EMAIL = "support@myellelab.com";
 export const LEGAL_LAST_UPDATED = "12 September 2026";
 
 /**
- * The App Store listing does not exist yet: the app is pre-submission, and a
- * repo-wide search for an App Store ID or an apps.apple.com URL comes back
- * empty.
+ * The Apple ID for the listing.
  *
- * `null` is deliberate and load-bearing. The download control reads this and
- * renders a non-interactive "Coming to the App Store" state while it is null,
- * so the site can ship before the listing does without ever pointing a visitor
- * at a dead link. Fill in the numeric ID after the app is approved and the
- * button becomes a real link with no other edit.
+ * `null` used to be the value, and the download control still reads this: while
+ * it is null it renders a non-interactive "Coming to the App Store" state
+ * rather than a dead link. With the ID set, the button becomes a real link and
+ * turns solid ink, which is also what stops the inverted marquee cards being
+ * the loudest thing above the fold.
+ *
+ * NOTE: the listing is not live yet, so this URL 404s until the app is
+ * approved and released. That is the right trade for now, because the id is
+ * permanent and the App Store resolves it the moment the app goes live, but it
+ * does mean the hero's primary action is broken in the interim. If the site is
+ * publicised before the app ships, set this back to null and the placeholder
+ * returns with no other edit.
  */
-export const APP_STORE_ID: string | null = null;
+export const APP_STORE_ID: string | null = "6811412550";
 
 export const appStoreUrl = APP_STORE_ID
   ? `https://apps.apple.com/app/id${APP_STORE_ID}`

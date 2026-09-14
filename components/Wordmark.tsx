@@ -44,7 +44,7 @@ function InlineIcon() {
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src="/app-icon.png"
+      src="/ego-icon-I.png"
       alt="E"
       width={1024}
       height={1024}
