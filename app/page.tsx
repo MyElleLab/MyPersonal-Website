@@ -73,11 +73,21 @@ export default function HomePage() {
               the E, set inline. See components/Wordmark.tsx and the
               .wordmark-* rules in globals.css.
 
-              No text-balance here. Balancing redistributes words across lines
-              to even their lengths, which can strand "MyPersonal Success" and
-              leave the nowrap group alone on line one. Natural wrapping keeps
-              the group with as much of the name as fits. */}
-          <Wordmark as="h1" trailing=": MyPersonal Success" className="font-serif text-5xl sm:text-6xl md:text-7xl tracking-wordmark leading-[1.03] text-ink animate-fade-up" />
+              No text-balance here, and under the current name it could not
+              help even if it were on. Measured, not assumed: the heading is a
+              single line at every width from 403px up. Below that it breaks
+              once, as "Ego:" then "MySuccess", and that break is FORCED: the
+              icon and "go" are one nowrap unit and "MySuccess" is one word, so
+              the space after the colon is the only break opportunity in the
+              string. Setting text-wrap: balance at 320, 360, 390 and 402px
+              produces byte-identical lines. It is off because it is a no-op.
+
+              It was off for a real reason under the old name, which had two
+              words after the colon and three lines at 390px: balancing could
+              strand the second word and leave the nowrap group alone on line
+              one. Keep it off. If the name ever grows a second word back, that
+              hazard returns with it and this comment stops being history. */}
+          <Wordmark as="h1" className="font-serif text-5xl sm:text-6xl md:text-7xl tracking-wordmark leading-[1.03] text-ink animate-fade-up" />
 
           {/* The positioning, and the only place on the page it is stated
               outright. Read from lib/site.ts so the hero, the footer, the

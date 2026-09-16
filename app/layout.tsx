@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   title: {
     default: APP_NAME,
     /* Legal pages set their own title and get the app name appended, so a
-       browser tab reads "Privacy Policy · (E)go: MyPersonal Success" without
+       browser tab reads "Privacy Policy · (E)go: MySuccess" without
        either page repeating the other's half.
 
        A middle dot, not a dash. House rule bans em and en dashes in all copy,

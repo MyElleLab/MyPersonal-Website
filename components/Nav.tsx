@@ -52,6 +52,12 @@ export function Nav() {
              accessible name or it announces as its URL. */
           aria-label={`${APP_SHORT_NAME}, home`}
         >
+          {/* trailing="" IS THE POINT, and it is why this prop still exists.
+              The hero and the footer omit it and get the name's tail; the nav
+              shows the mark ALONE. That is a deliberate difference between the
+              three lockups, so it is stated here rather than defaulted into.
+              `label` is the default too, kept explicit because a mark with no
+              visible name should show what it announces at the call site. */}
           <Wordmark
             trailing=""
             label={APP_NAME}

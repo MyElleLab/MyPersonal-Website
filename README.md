@@ -1,4 +1,4 @@
-# (E)go: MyPersonal Success
+# (E)go: MySuccess
 
 Marketing and legal site for the iOS app.
 
@@ -71,7 +71,7 @@ grep -rnP '[\x{2012}\x{2013}\x{2014}\x{2015}\x{2212}]' . \
   --exclude=package-lock.json --exclude='*.png'
 ```
 
-The app's name in prose is always "(E)go: MyPersonal Success" or "(E)go". The
+The app's name in prose is always "(E)go: MySuccess" or "(E)go". The
 home screen label is "go" because the icon supplies the E; that reads as a typo
 in a sentence and is never used in body copy.
 

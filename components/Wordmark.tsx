@@ -1,4 +1,4 @@
-import { APP_NAME } from "@/lib/site";
+import { APP_NAME, APP_NAME_TAIL } from "@/lib/site";
 
 /**
  * The wordmark: the app icon standing in for the E, followed by "go".
@@ -9,7 +9,7 @@ import { APP_NAME } from "@/lib/site";
  * the lockup cannot land in one place and miss the others.
  *
  * NO BRACKETS. The mark reads "Ego", not "(E)go". That is a deliberate change,
- * and the product's NAME is unaffected: it is still "(E)go: MyPersonal Success"
+ * and the product's NAME is unaffected: it is still "(E)go: MySuccess"
  * in the App Store, in the metadata, in the schema and in the accessible name
  * below. The wordmark is a mark; APP_NAME is the name. See lib/site.ts.
  *
@@ -32,7 +32,7 @@ import { APP_NAME } from "@/lib/site";
  *
  * ACCESSIBILITY. Every instance carries the real name as a visually hidden text
  * node with the visual assembly aria-hidden, so the announced name is always
- * "(E)go: MyPersonal Success" no matter what the mark looks like.
+ * "(E)go: MySuccess" no matter what the mark looks like.
  *
  * A PLAIN <img>, NOT next/image. next/image writes style="color:transparent"
  * inline, which makes alt text invisible; a blocked image then rendered "go"
@@ -57,17 +57,23 @@ function InlineIcon() {
 
 /**
  * @param as        heading level for the hero, plain span elsewhere.
- * @param trailing  what follows the icon. "go" in the nav, the full name in
- *                  the hero and footer. Never includes the E: the icon is it.
+ * @param trailing  what follows the icon and its "go". Defaults to the name's
+ *                  own tail, which is what the hero and the footer want, so
+ *                  neither passes it. The NAV passes "" on purpose: it shows
+ *                  the mark alone. That is the one real difference between the
+ *                  three lockups and it stays visible at the call site.
+ *                  Never includes the E: the icon is it.
+ * @param label     the announced name. Same default source as `trailing`, so
+ *                  what the mark reads and what it announces cannot drift.
  */
 export function Wordmark({
   as = "span",
-  trailing,
+  trailing = APP_NAME_TAIL,
   className = "",
   label = APP_NAME,
 }: {
   as?: "h1" | "span";
-  trailing: string;
+  trailing?: string;
   className?: string;
   label?: string;
 }) {

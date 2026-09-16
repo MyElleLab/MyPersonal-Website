@@ -2,7 +2,7 @@
   "name": "ego-website",
   "version": "1.0.0",
   "private": true,
-  "description": "Marketing and legal site for (E)go: MyPersonal Success. ego.myellelab.com",
+  "description": "Marketing and legal site for (E)go: MySuccess. ego.myellelab.com",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",

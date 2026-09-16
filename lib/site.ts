@@ -18,18 +18,48 @@
 export const SITE_URL = "https://ego.myellelab.com";
 
 /**
- * The product's name in prose, everywhere, without exception.
+ * The product's name, in two parts, because the wordmark needs the second part
+ * on its own and the prose needs both.
  *
  * The on-device home screen label is "go" (INFOPLIST_KEY_CFBundleDisplayName in
  * project.pbxproj) because the icon supplies the E. That is a nice piece of
  * work on a home screen and a typo in a sentence, so it is never reproduced in
  * body copy. Written out, the name is always the full string below.
+ *
+ * WHY THIS IS SPLIT, and why the split is here rather than in the component.
+ *
+ * components/Wordmark.tsx renders the icon plus "go" and takes everything after
+ * it as a prop. That tail used to be a hardcoded literal at the hero and the
+ * footer while the lockup's ACCESSIBLE NAME read APP_NAME, so the pixels and
+ * the announcement were two independent copies of one string. They could drift,
+ * and a rename that touched only APP_NAME would have shipped a mark that said
+ * one name and announced another, with nothing failing to report it.
+ *
+ * The fix is NOT to have Wordmark slice APP_NAME at its colon. That would make
+ * the component depend on the name containing one, and a name that did not
+ * would render the whole string after the icon: "Ego(E)go: Whatever". Silent,
+ * and invisible to a grep. So the tail is its own literal and the full name is
+ * COMPOSED from it. The two cannot disagree, because only one of them is typed.
  */
-export const APP_NAME = "(E)go: MyPersonal Success";
 
-/** For places that need the name inside a longer sentence without the colon
-    clause dragging behind it. Still never bare "go". */
+/** The name's head, and a name in its own right: for places that want it inside
+    a longer sentence without the colon clause dragging behind it. The nav's
+    home link is one. Still never bare "go". */
 export const APP_SHORT_NAME = "(E)go";
+
+/** Everything after the wordmark, colon and leading space included. The only
+    place this string is typed. components/Wordmark.tsx defaults to it. */
+export const APP_NAME_TAIL = ": MySuccess";
+
+/**
+ * The product's name in prose, everywhere, without exception.
+ *
+ * Reads "(E)go: MySuccess". Stated here because this file exists to be read
+ * rather than evaluated, and a composed value you have to assemble in your head
+ * is worse than a literal you can just look at. If the two ever disagree, the
+ * parts above are right and this line is stale.
+ */
+export const APP_NAME = `${APP_SHORT_NAME}${APP_NAME_TAIL}`;
 
 export const SITE_NAME = APP_NAME;
 
@@ -54,7 +84,7 @@ export const SITE_NAME = APP_NAME;
  * because the four that are wrong are the ones nobody looks at: the search
  * snippet, the link preview and the structured data.
  */
-export const TAGLINE = "The app that reminds you that you are the best.";
+export const TAGLINE = "Remind yourself that you are the best.";
 
 /**
  * The search snippet. Longer than the tagline on purpose.
