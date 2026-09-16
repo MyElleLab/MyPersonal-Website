@@ -116,22 +116,39 @@ export const CONTACT_EMAIL = "support@myellelab.com";
 export const LEGAL_LAST_UPDATED = "12 September 2026";
 
 /**
- * The Apple ID for the listing.
+ * The Apple ID for the listing, or null while there is no listing to point at.
  *
- * `null` used to be the value, and the download control still reads this: while
- * it is null it renders a non-interactive "Coming to the App Store" state
- * rather than a dead link. With the ID set, the button becomes a real link and
- * turns solid ink, which is also what stops the inverted marquee cards being
- * the loudest thing above the fold.
+ * The download control reads this: while it is null it renders a
+ * non-interactive "Coming to the App Store" state rather than a dead link.
+ * With the ID set, the button becomes a real link and turns solid ink, which
+ * is also what stops the inverted marquee cards being the loudest thing above
+ * the fold.
  *
- * NOTE: the listing is not live yet, so this URL 404s until the app is
- * approved and released. That is the right trade for now, because the id is
- * permanent and the App Store resolves it the moment the app goes live, but it
- * does mean the hero's primary action is broken in the interim. If the site is
- * publicised before the app ships, set this back to null and the placeholder
- * returns with no other edit.
+ * IT IS NULL AGAIN, DELIBERATELY, and this is the case the comment below it
+ * used to describe in advance.
+ *
+ * The ID was set on the bet that the site would ship before anyone arrived,
+ * and that the App Store would resolve the URL the moment the app went live.
+ * The first half of that bet has now failed: myellelab.com is live, its (E)go
+ * card links straight here, and the listing still does not exist. Checked, not
+ * assumed: apps.apple.com/app/id6811412550 returns 404 and the iTunes lookup
+ * API returns zero results. So a visitor can reach this page and press a
+ * primary action that 404s, which is strictly worse than a button that says it
+ * is not ready. The studio site already shows "Coming soon" for the same app,
+ * so this also brings the two properties back into agreement.
+ *
+ * TO RELAUNCH: put the ID below back in place of null. That is the whole edit.
+ * The button, its aria-label, the schema.org downloadUrl and the solid-ink
+ * treatment all follow from it.
+ *
+ *     APP_STORE_ID = "6811412550"
+ *
+ * The ID is permanent and correct, which is why it is kept here rather than
+ * looked up again. It is the same value the studio site holds in
+ * lib/products.ts, and the two must go live together or one will lag: see the
+ * launch checklist in MyLab/C4MyLab/ToDo.md.
  */
-export const APP_STORE_ID: string | null = "6811412550";
+export const APP_STORE_ID: string | null = null;
 
 export const appStoreUrl = APP_STORE_ID
   ? `https://apps.apple.com/app/id${APP_STORE_ID}`
