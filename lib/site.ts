@@ -218,5 +218,4 @@ export const PRO_FEATURES = [
   "The full history of every past period",
   "Save the lines that land",
   "Share any quote as an image",
-  "Both app icons",
 ] as const;
